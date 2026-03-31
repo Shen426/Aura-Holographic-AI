@@ -76,7 +76,7 @@ class DialogueManager:
             return True
 
         elif cmd == "开发者是谁":
-            print(">> [Aura]: 我的造物主是了不起的 SHEN 女士。")
+            print(">> [Aura]: 我的缔造者是了不起的 SHEN 女士。")
             logger.info("开发者信息查询")
             return True
 
