@@ -1,17 +1,17 @@
 """
 interaction/dialogue_manager.py
 
-Aura 全息数字生命与交互平台 - 对话管理模块（前台接待员）
+Aura Holographic Digital Life & Interaction Platform - Dialogue Management Module (Front-desk Receptionist)
 
-模块职责（单一职责原则 SRP）：
-    - 接收用户输入（文字、未来可扩展为语音/手势）
-    - 识别并处理基础系统指令（启动、退出、开发者信息等）
-    - 维持长效交互循环
-    - 将复杂对话内容转发给核心大脑 core/agent.py 处理
-    - 提供优雅停机和错误处理机制
+Module Responsibilities (Single Responsibility Principle - SRP):
+    - Receive user input (Text, expandable to Voice/Gestures in the future)
+    - Identify and handle basic system commands (Start, Exit, Developer info, etc.)
+    - Maintain the long-term interaction loop
+    - Forward complex dialogue content to the core brain (core/agent.py)
+    - Provide graceful shutdown and error handling mechanisms
 
-作者：为美术跨学科研究者设计的通俗易懂版
-基于 Legacy Code 重构：保留了 check_system_status 的核心意图，并升级为 OOP 架构
+Author: Easy-to-understand version designed for Interdisciplinary Arts Researchers
+Based on Legacy Code Refactoring: Retains the core intent of 'check_system_status' and upgrades it to an OOP architecture.
 """
 
 from typing import Callable, Optional, Dict, Any
@@ -19,7 +19,7 @@ import sys
 import logging
 from datetime import datetime
 
-# 配置日志，方便观察系统运行过程
+# Configure logging to observe the system operation process
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s | %(levelname)s | [DialogueManager] %(message)s'
@@ -29,44 +29,44 @@ logger = logging.getLogger(__name__)
 
 class DialogueManager:
     """
-    Aura 对话管理器 - 前台交互核心类
+    Aura Dialogue Manager - Core Interaction Class
 
-    像一位专业的接待员：
-    - 听到简单指令（启动、退出、开发者是谁）就自己处理
-    - 听到复杂内容就转交给「大脑」（core/agent.py）
-    - 负责整个对话的开始、维持和优雅结束
+    Acts like a professional receptionist:
+    - Handles simple commands personally (Start, Exit, Who is the developer?)
+    - Forwards complex content to the "Brain" (core/agent.py)
+    - Responsible for starting, maintaining, and gracefully ending the dialogue.
     """
 
     def __init__(self, agent_processor: Optional[Callable[[str], str]] = None):
         """
-        初始化对话管理器
+        Initialize the Dialogue Manager
 
         Args:
-            agent_processor: 核心大脑的处理函数（来自 core/agent.py）
-                             如果不传，则使用 Mock 版本，方便单独测试这个模块
+            agent_processor: Processing function from the core brain (from core/agent.py)
+                             If None, a Mock version is used for independent testing.
         """
         self.is_running: bool = False
         self.current_session_id: str = self._generate_session_id()
         self.conversation_history: list[Dict[str, str]] = []
 
-        # 核心大脑接口（解耦关键）
+        # Core Brain Interface (Key for Decoupling)
         self.agent_processor = agent_processor or self._mock_agent_processor
 
         logger.info(f"DialogueManager 初始化完成 | 会话ID: {self.current_session_id}")
 
     def _generate_session_id(self) -> str:
-        """生成唯一会话ID，用于追踪每次交互"""
+        """Generate a unique Session ID to track each interaction"""
         return f"aura_session_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
-    # ====================== Legacy Code 升级部分 ======================
+    # ====================== Legacy Code Upgrade Section ======================
 
     def check_system_status(self, user_input: str) -> bool:
         """
-        【升级版】系统指令处理函数
+        [Upgraded] System Command Processor
 
-        直接基于你之前写的 check_system_status 进行重构，
-        保留了相同的指令意图，同时增加了更多友好提示和日志。
-        返回 True 表示继续运行，False 表示应该退出。
+        Refactored directly from the previous 'check_system_status',
+        retaining the same command intent while adding friendly prompts and logs.
+        Returns True to continue running, False to exit.
         """
         cmd = user_input.strip()
 
@@ -85,7 +85,7 @@ class DialogueManager:
             logger.info("收到退出指令")
             return False
 
-        # 新增常用指令（推荐扩展）
+        # Newly added common commands (Recommended for extension)
         elif cmd in ["帮助", "help", "?"]:
             print(">> [Aura]: 可用指令：启动系统、开发者是谁、帮助、退出")
             return True
@@ -95,38 +95,38 @@ class DialogueManager:
             return True
 
         else:
-            # 非系统指令，交给核心 Agent 处理
+            # Not a system command, pass to core Agent
             return True
 
     def _mock_agent_processor(self, user_input: str) -> str:
-        """Mock 核心大脑（开发阶段使用）"""
+        """Mock Core Brain (Used during development phase)"""
         logger.info(f"[MOCK Agent] 收到复杂输入: {user_input[:60]}...")
         return f"Aura 正在思考中...（已收到：{user_input}）\n接下来见证全息粒子生命韵动为您呈现更丰富的回应。"
 
     def process_user_input(self, user_input: str) -> Optional[str]:
         """
-        处理单条用户输入的核心方法
+        Core method to process a single user input
 
-        流程：
-        1. 先交给 check_system_status 判断是否为系统指令
-        2. 如果是系统指令 → 根据返回值决定是否继续运行
-        3. 如果不是系统指令 → 转发给核心 Agent 处理，并返回回复内容
+        Process:
+        1. Hand over to check_system_status to determine if it's a system command.
+        2. If System Command -> Decide whether to continue based on return value.
+        3. If Not System Command -> Forward to core Agent and return the response.
         """
         if not user_input or not user_input.strip():
             return "💫 我在这里，请告诉我你的想法～"
 
-        # 第一步：处理系统指令（保留你原来的逻辑意图）
+        # Step 1: Handle system commands (Retaining original logic intent)
         should_continue = self.check_system_status(user_input)
 
-        # 如果系统指令要求退出，则直接返回 None（上层循环会停止）
+        # If system command requests exit, return None (Outer loop will stop)
         if not should_continue:
             return None
 
-        # 第二步：非系统指令 → 记录历史并交给核心大脑
+        # Step 2: Non-system command -> Log history and forward to core brain
         self.conversation_history.append({"role": "user", "content": user_input})
 
         try:
-            # 调用核心 Agent 处理复杂语义
+            # Call core Agent to process complex semantics
             response = self.agent_processor(user_input)
             self.conversation_history.append({"role": "assistant", "content": response})
             return response
@@ -136,17 +136,17 @@ class DialogueManager:
 
     def run_interactive_loop(self) -> None:
         """
-        主交互循环（升级自原来的 main() 函数）
+        Main Interaction Loop (Upgraded from the original main() function)
 
-        特点：
-        - 长效运行
-        - 支持 Ctrl+C 优雅退出
-        - 异常不会导致整个程序崩溃
+        Features:
+        - Long-term operation
+        - Supports Ctrl+C for graceful exit
+        - Exceptions will not crash the entire program
         """
         self.is_running = True
         print("\n" + "=" * 70)
-        print("🌟 Aura 全息数字生命律动平台 - 对话系统已启动")
-        print("   请输入指令开始交互（例如：启动系统、开发者是谁、退出）")
+        print("🌟 Aura 全息数字生命韵动平台 - 对话系统已启动")
+        print("    请输入指令开始交互（例如：启动系统、开发者是谁、退出）")
         print("=" * 70)
 
         try:
@@ -159,12 +159,12 @@ class DialogueManager:
 
                     response = self.process_user_input(user_input)
 
-                    # 如果返回 None，说明需要退出
+                    # If response is None, it indicates an exit request
                     if response is None:
                         self.is_running = False
                         break
 
-                    # 显示 Aura 的回复
+                    # Display Aura's response
                     if response:
                         print(f"✨ Aura：{response}")
 
@@ -180,7 +180,7 @@ class DialogueManager:
             self.shutdown()
 
     def shutdown(self) -> None:
-        """优雅停机，清理资源"""
+        """Graceful shutdown, resource cleanup"""
         if not self.is_running:
             return
 
@@ -193,7 +193,7 @@ class DialogueManager:
         print("\n🛠️ Aura 系统资源清理完成。感谢你的陪伴！")
 
     def get_status(self) -> Dict[str, Any]:
-        """返回当前系统状态（便于外部监控）"""
+        """Returns current system status (for external monitoring)"""
         return {
             "is_running": self.is_running,
             "session_id": self.current_session_id,
@@ -202,19 +202,19 @@ class DialogueManager:
         }
 
 
-# ====================== 模块独立运行入口 ======================
+# ====================== Independent Module Entry Point ======================
 
 def main():
     """
-    方便你直接运行测试 dialogue_manager.py
-    实际项目中，你可以从主程序导入 DialogueManager 类使用
+    Facilitates direct testing of dialogue_manager.py
+    In actual projects, import the DialogueManager class from the main program.
     """
     print("🚀 正在启动 Aura 对话管理模块独立测试模式...\n")
 
-    # 创建对话管理器（暂时使用 Mock，后续替换为真实 Agent）
+    # Create Dialogue Manager (Temporary Mock, replace with real Agent later)
     dialogue_manager = DialogueManager()
 
-    # 启动交互循环
+    # Start the interaction loop
     dialogue_manager.run_interactive_loop()
 
 
