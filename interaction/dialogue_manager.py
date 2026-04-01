@@ -81,7 +81,7 @@ class DialogueManager:
             return True
 
         elif cmd in ["退出", "exit", "bye", "再见"]:
-            print(">> [Aura]: 再见，Selene 女士。期待下次与您共创艺术。🌌")
+            print(">> [Aura]: 再见，Selene 女士。期待下次与您共创艺术。")
             logger.info("收到退出指令")
             return False
 
