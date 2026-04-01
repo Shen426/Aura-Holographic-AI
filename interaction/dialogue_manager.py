@@ -145,7 +145,7 @@ class DialogueManager:
         """
         self.is_running = True
         print("\n" + "=" * 70)
-        print("🌟 Aura 全息数字生命韵动平台 - 对话系统已启动")
+        print("🌟 Aura 全息生命韵动平台 - 对话系统已启动")
         print("    请输入指令开始交互（例如：启动系统、开发者是谁、退出）")
         print("=" * 70)
 
