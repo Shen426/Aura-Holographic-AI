@@ -71,7 +71,7 @@ class DialogueManager:
         cmd = user_input.strip()
 
         if cmd == "启动系统":
-            print(" 系统已就绪，全息投影模块待命。")
+            print(">> [Aura]: 系统已就绪，全息投影模块待命。")
             logger.info("系统启动指令已执行")
             return True
 
