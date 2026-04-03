@@ -1,7 +1,7 @@
 """
 core/agent.py
 
-Aura 全息数字生命平台 - 核心大脑 (DeepSeek 版本)
+Aura 全息数字生命韵动平台 - 核心大脑 (DeepSeek 版本)
 使用 OpenAI 兼容接口，简单稳定，适合开发阶段
 """
 
