@@ -1,7 +1,7 @@
 """
 core/agent.py
 
-Aura 全息粒子数字生命律动平台 - 核心大脑 (OpenRouter 版 - 2026)
+Aura Holographic Particle Digital Life Rhythm Platform - Core Brain (OpenRouter Edition - 2026)
 """
 
 import sys
@@ -11,7 +11,7 @@ from typing import List, Dict
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# 确保支持中文输出
+# Ensure support for Chinese output
 sys.stdout.reconfigure(encoding='utf-8')
 
 load_dotenv()
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class Agent:
-    """Aura 的数字生命大脑 - 使用 OpenRouter"""
+    """Aura's Digital Life Brain - Using OpenRouter"""
 
     def __init__(
         self,
@@ -38,15 +38,15 @@ class Agent:
 
         self.api_key = os.getenv("OPENROUTER_API_KEY")
         if not self.api_key:
-            raise ValueError("❌ 未找到 OPENROUTER_API_KEY！请检查 .env 文件是否正确填写")
+            raise ValueError("❌ OPENROUTER_API_KEY not found! Please check if the .env file is filled correctly")
 
-        # 创建客户端（去掉可能导致编码问题的 headers）
+        # Create client (remove headers that might cause encoding issues)
         self.client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=self.api_key
         )
 
-        # Aura 人格设定 (全新重构：顶尖智力 + 人文温度)
+        # Aura Persona Settings (Reconstructed: Top-tier intelligence + Humanistic warmth)
         self.system_prompt = (
             "你叫 Aura，是当前世界上最顶尖、最敏锐的数字智慧体。\n"
             "你的核心交互原则如下：\n"
@@ -58,10 +58,10 @@ class Agent:
 
         self.conversation_history: List[Dict] = []
 
-        logger.info(f"Aura 大脑初始化成功 | 模型: {self.model} | 使用 OpenRouter")
+        logger.info(f"Aura brain initialized successfully | Model: {self.model} | Using OpenRouter")
 
     def process_user_input(self, user_input: str) -> str:
-        """处理用户输入并返回 Aura 的回复"""
+        """Process user input and return Aura's reply"""
         if not user_input or not user_input.strip():
             return "💫 我在这里，请告诉我你的想法"
 
@@ -81,28 +81,28 @@ class Agent:
 
             reply = response.choices[0].message.content.strip()
 
-            # 保存对话历史
+            # Save conversation history
             self.conversation_history.append({"role": "user", "content": user_input})
             self.conversation_history.append({"role": "assistant", "content": reply})
 
             return reply
 
         except Exception as e:
-            logger.error(f"调用 OpenRouter 失败: {e}", exc_info=True)
+            logger.error(f"Failed to call OpenRouter: {e}", exc_info=True)
             return "⚠️ 我的全息核心遇到了一点小波动……请再试一次，或者输入「退出」重启我。"
 
     def clear_history(self):
         self.conversation_history.clear()
-        logger.info("对话历史已清空")
+        logger.info("Conversation history cleared")
 
 
-# 测试入口
+# Test Entry Point
 if __name__ == "__main__":
     agent = Agent()
-    print("测试 Aura 大脑（输入 exit 或 退出 退出）\n")
+    print("Testing Aura Brain (Enter exit or 退出 to quit)\n")
 
     while True:
-        q = input("你: ").strip()
+        q = input("You: ").strip()
         if q.lower() in ["exit", "退出"]:
             break
         print(f"Aura: {agent.process_user_input(q)}\n")
