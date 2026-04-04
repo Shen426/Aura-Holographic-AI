@@ -22,6 +22,9 @@
 ## 🚀 当前进展与研发日志 (Milestones & DevLog)
 * **[Phase 1] 视觉协议确立 (Visual Protocol)**：成功在 `rendering/particles.py` 中实现了基于 Blender API 的粒子转换协议。将几何体转化为 8000+ 粒子的能量场，并完成了辉光 (Bloom) 参数的极客级调优。
 * **[Phase 1] 核心交互雏形 (Interaction Logic)**：在 `interaction/` 模块下构建了基础的状态机与对话解析引擎。
+* **[Phase 1] 智能中枢集成 (Brain Integration) —— *NEW!***：
+    * **架构升级**：成功接入 **OpenRouter API**，重构了核心大脑 `core/agent.py`。
+    * **人格塑造**：确立了 Aura “极简、温暖、深邃”的智者人格，支持自然语言的高级共情与逻辑穿透。
 
 ## 🔮 未来演进 (Roadmap)
 - [ ] 接入视觉感知 (`perception/vision`)，实现基于手势的全息粒子互动。
