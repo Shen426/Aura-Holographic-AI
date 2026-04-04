@@ -205,3 +205,26 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ================== Aura 项目安全配置 ==================
+
+# 环境变量和密钥（最重要！防止泄露）
+.env
+.env.*
+!.env.example
+
+# 虚拟环境
+.venv/
+venv/
+env/
+ENV/
+
+# PyCharm / IDE 临时文件（推荐添加）
+.idea/
+*.iml
+
+# 本地日志和临时文件
+*.log
+logs/
+__pycache__/
+*.pyc
