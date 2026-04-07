@@ -99,15 +99,23 @@ class Agent:
                 max_tokens=self.max_tokens,
             )
 
+            # 拿到原始回复文本
             reply = response.choices[0].message.content.strip()
 
             # 保存对话历史
             self.conversation_history.append({"role": "user", "content": user_input})
             self.conversation_history.append({"role": "assistant", "content": reply})
 
-            # 👈 新增：发送状态变更（思考完毕，恢复平静）
+            # 状态恢复与多维特征提取（思考完毕，恢复平静）
+            # 1. 发送思考结束的平静状态
             self.vision.transmit("/aura/state", 0)
 
+            # 2. 提取文本长度特征
+            reply_length = len(reply)
+
+            # 3. 将长度作为代表“能量强度”的浮点数投射出去
+            self.vision.transmit("/aura/intensity", float(reply_length))
+            
             return reply
 
         except Exception as e:
