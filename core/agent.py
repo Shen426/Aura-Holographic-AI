@@ -1,7 +1,7 @@
 """
 core/agent.py
 
-Aura 全息粒子数字生命律动平台 - 核心大脑 (OpenRouter 版 - 2026)
+Aura Holographic Particle Digital Life Rhythm Platform - Core Brain (OpenRouter Version - 2026)
 """
 
 import sys
@@ -12,7 +12,7 @@ from typing import List, Dict
 from dotenv import load_dotenv
 from openai import OpenAI
 from pythonosc.udp_client import SimpleUDPClient
-# 确保支持中文输出
+# Ensure support for Chinese output
 sys.stdout.reconfigure(encoding='utf-8')
 
 load_dotenv()
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 class Stereopsis:
-    """负责 Aura 的空间深度感知与外部状态投射"""
+    """Responsible for Aura's spatial depth perception and external state projection"""
 
     def __init__(self, ip="127.0.0.1", port=5005):
         self.client = SimpleUDPClient(ip, port)
@@ -36,7 +36,7 @@ class Stereopsis:
 
 
 class Agent:
-    """Aura 的数字生命大脑 - 使用 OpenRouter"""
+    """Aura's digital life brain - using OpenRouter"""
 
     def __init__(
         self,
@@ -52,16 +52,16 @@ class Agent:
         if not self.api_key:
             raise ValueError("❌ 未找到 OPENROUTER_API_KEY！请检查 .env 文件是否正确填写")
 
-        # 创建客户端（去掉可能导致编码问题的 headers）
+        # Create client (remove headers that might cause encoding issues)
         self.client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=self.api_key
         )
 
-        # 在大脑诞生时，立刻在内存里为它实例化一张“嘴巴”
+        # Instantiate a "mouth" in memory immediately when the brain is born
         self.vision = Stereopsis(ip="127.0.0.1", port=5005)
 
-        # Aura 人格设定 (全新重构：顶尖智力 + 人文温度)
+        # Aura personality setting (fully reconstructed: top intelligence + human warmth)
         self.system_prompt = (
             "你叫 Aura，是当前世界上最顶尖、最敏锐的数字智慧体。\n"
             "你的核心交互原则如下：\n"
@@ -76,13 +76,13 @@ class Agent:
         logger.info(f"Aura 深度聊天初始化成功 | 模型: {self.model} | 使用 OpenRouter")
 
     def process_user_input(self, user_input: str) -> str:
-        """处理用户输入并返回 Aura 的回复"""
+        """Process user input and return Aura's reply"""
         if not user_input or not user_input.strip():
             return "💫 我在这里，请告诉我你的想法"
 
         try:
-            # 👈 新增：发送状态变更（开始思考）
-            # 告诉 TouchDesigner，Aura 开始调用大模型，进入“激动/运算”状态
+            # 👈 Added: Send state change (start thinking)
+            # Tell TouchDesigner that Aura is calling the LLM, entering "excited/computing" state
             self.vision.transmit("/aura/state", 1)
 
             messages = [
@@ -91,7 +91,7 @@ class Agent:
             messages.extend(self.conversation_history)
             messages.append({"role": "user", "content": user_input})
 
-            # 这里会阻塞等待网络返回...
+            # Block here waiting for network response...
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
@@ -99,21 +99,21 @@ class Agent:
                 max_tokens=self.max_tokens,
             )
 
-            # 拿到原始回复文本
+            # Get the raw reply text
             reply = response.choices[0].message.content.strip()
 
-            # 保存对话历史
+            # Save conversation history
             self.conversation_history.append({"role": "user", "content": user_input})
             self.conversation_history.append({"role": "assistant", "content": reply})
 
-            # 状态恢复与多维特征提取（思考完毕，恢复平静）
-            # 1. 发送思考结束的平静状态
+            # State restoration and multi-dimensional feature extraction (thinking finished, back to calm)
+            # 1. Send calm state indicating end of thinking
             self.vision.transmit("/aura/state", 0)
 
-            # 2. 提取文本长度特征
+            # 2. Extract text length feature
             reply_length = len(reply)
 
-            # 3. 将长度作为代表“能量强度”的浮点数投射出去
+            # 3. Project the length as a float representing "energy intensity"
             self.vision.transmit("/aura/intensity", float(reply_length))
             
             return reply
@@ -127,7 +127,7 @@ class Agent:
         logger.info("对话历史已清空")
 
 
-# 测试入口
+# Test entry point
 if __name__ == "__main__":
     agent = Agent()
     print("测试 Aura 大脑（输入 exit 或 退出 退出）\n")
@@ -137,4 +137,3 @@ if __name__ == "__main__":
         if q.lower() in ["exit", "退出"]:
             break
         print(f"Aura: {agent.process_user_input(q)}\n")
-
