@@ -7,7 +7,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 class OpenRouterLLM:
-    """Aura 的大模型 API 驱动层 (纯发声器官)"""
+    """Aura 的大模型 API 驱动层"""
 
     def __init__(self, model="openrouter/free", temperature=0.85, max_tokens=2048):
         self.model = model
