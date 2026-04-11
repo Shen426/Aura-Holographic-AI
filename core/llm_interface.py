@@ -1,20 +1,40 @@
-# 文件路径：core/llm_interface.py
-import requests # 或 openai 库，取决于你怎么连的
+import os
+import logging
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+logger = logging.getLogger(__name__)
 
 class OpenRouterLLM:
-    def __init__(self):
-        # 【装】：把钥匙装进自己口袋
-        self.api_key = "sk-or-v1-你的密钥"
-        self.url = "https://openrouter.ai/api/v1/chat/completions"
-        self.model = "你的免费大模型名字"
+    """Aura 的大模型 API 驱动层 (纯发声器官)"""
 
-    def chat(self, prompt):
-        # 【封】：发请求的具体复杂代码全藏在这里
-        headers = {"Authorization": f"Bearer {self.api_key}"}
-        data = {"model": self.model, "messages": [{"role": "user", "content": prompt}]}
-        
-        # 假设这里是发送请求并获取回复的代码
-        # response = requests.post(...)
-        # return response.json()['choices'][0]['message']['content']
-        
-        return "这是来自 OpenRouter 封装类的回复测试"
+    def __init__(self, model="openrouter/free", temperature=0.85, max_tokens=2048):
+        self.model = model
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+
+        self.api_key = os.getenv("OPENROUTER_API_KEY")
+        if not self.api_key:
+            raise ValueError("❌ 未找到 OPENROUTER_API_KEY！请检查 .env 文件")
+
+        # 实例化真正的 OpenAI 客户端
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=self.api_key
+        )
+
+    def chat(self, messages_list):
+        """接收完整的历史消息列表，请求 API 并返回纯文本"""
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages_list,
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+            )
+            return response.choices[0].message.content.strip()
+            
+        except Exception as e:
+            logger.error(f"调用 OpenRouter 失败: {e}", exc_info=True)
+            return "⚠️ 我的全息核心遇到了一点小波动……请检查网络连接。"
