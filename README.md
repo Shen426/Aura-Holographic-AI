@@ -26,23 +26,23 @@
   * **架构重构**：完成核心系统解耦，将大模型调用逻辑从 `agent.py` 中剥离，重构为独立模块 `core/llm_interface.py`。
   * **接口抽象**：构建统一 LLM 接口层，支持未来多模型接入与认知调度扩展。
   * **认知升级**：`agent.py` 转型为“认知调度器（Cognitive Orchestrator）”，专注决策、意图解析与记忆管理。
-* **[Phase 2] 渲染系统演进 (Rendering Evolution) —— *IN PROGRESS***：
+* **[Phase 1] 渲染系统演进 (Rendering Evolution) —— *IN PROGRESS***：
 
   * **技术迁移规划**：计划将粒子渲染从 Blender 迁移至 TouchDesigner。
   * **目标能力**：实现实时粒子驱动、外部信号响应（语音 / 状态 / 情绪）与更高维度的视觉交互表现。
 
-* **[Phase 2] 感知系统扩展 (Perception Expansion) —— *NEW!***：
+* **[Phase 1] 感知系统扩展 (Perception Expansion) —— *NEW!***：
 
-  * **语音模块初始化**：在 `perception/audio/` 下新增 `speech_to_text.py`，开始构建语音转文本（Speech-to-Text）能力。
-  * **交互升级方向**：从文本输入过渡至语音输入，为具身交互提供入口。
+  * **语音模块初始化**：在 `interaction/voive_control.py` 下开始构建aura文本转语音能力。
+
 
 ## 🔮 未来演进 (Roadmap)
-* **[Phase 2] 渲染系统演进 (Rendering Evolution) —— *IN PROGRESS***：
+* **[Phase 1] 渲染系统演进 (Rendering Evolution) —— *IN PROGRESS***：
 
   * **技术迁移规划**：计划将粒子渲染从 Blender 迁移至 TouchDesigner。
   * **目标能力**：实现实时粒子驱动、外部信号响应（语音 / 状态 / 情绪）与更高维度的视觉交互表现。
 
-* **[Phase 2] 感知系统扩展 (Perception Expansion) —— *NEW!***：
+* **[Phase 1] 感知系统扩展 (Perception Expansion) —— *NEW!***：
 
   * **语音模块初始化**：在 `perception/audio/` 下新增 `speech_to_text.py`，开始构建语音转文本（Speech-to-Text）能力。
   * **交互升级方向**：从文本输入过渡至语音输入，为具身交互提供入口。
