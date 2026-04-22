@@ -47,5 +47,8 @@
   * **语音模块初始化**：在 `perception/audio/` 下新增 `speech_to_text.py`，开始构建语音转文本（Speech-to-Text）能力。
   * **交互升级方向**：从文本输入过渡至语音输入，为具身交互提供入口。
 
+* **[phase 2]嵌入式工程（Embedded Engineering）**
+
+  * **研究方向**：通过整合人工智能认知、生成式视觉系统和空间计算，Aura 旨在重新定义人类在传统界面之外感知和与智能系统互动的方式。
 ---
 > *"Art defines the soul, HCI designs the behavior, and Code builds the nervous system."*
