@@ -1,39 +1,49 @@
-import matplotlib.pyplot as plt
+import logging
 import os
+import matplotlib.pyplot as plt
 from pythonosc.udp_client import SimpleUDPClient
 
-# 假设这是你的 OSC 发送端 (基于你现有的代码扩展)
-client = SimpleUDPClient("127.0.0.1", 5005)
+logger = logging.getLogger(__name__)
 
 
-def generate_and_send_chart(intent_data):
-    """
-    1. 生成数据图表 (模拟 LLM 经过分析后给出的数据)
-    """
-    labels = ['Top 2% Target', 'General Applicant', 'Tier-2 Applicant']
-    
-    probabilities = [0.08, 0.04, 0.0001]
+class Stereopsis:
+    """负责 Aura 的空间深度感知、外部状态(TouchDesigner)投影与多模态数据生成"""
 
-    plt.figure(figsize=(8, 6))
-    plt.bar(labels, probabilities, color=['#4fc3f7', '#81c784', '#e57373'])
-    plt.title('MIT Full-Ride Admission Probability Model', color='white')
+    def __init__(self, ip="127.0.0.1", port=5005):
+        self.client = SimpleUDPClient(ip, port)
+        # logging setup might need basic config if not done globally
+        logging.basicConfig(level=logging.INFO)
+        logger.info(f"Stereopsis 立体视觉神经已连接 -> {ip}:{port}")
 
-    # 统一样式，配合 Aura 的科幻感
-    plt.gca().set_facecolor('black')
-    plt.gcf().patch.set_facecolor('black')
-    plt.gca().tick_params(colors='white')
-    plt.gca().spines['bottom'].set_color('white')
-    plt.gca().spines['left'].set_color('white')
+    def transmit(self, address, value):
+        """核心封装：发射 OSC 信号"""
+        self.client.send_message(address, value)
 
-    # 2. 保存到绝对路径
-    chart_path = os.path.abspath("current_chart.png")
-    plt.savefig(chart_path)
-    plt.close()
+    def generate_and_send_chart(self, intent_data=None):
+        """生成数据图表并通知 TouchDesigner 切换渲染模式"""
+        labels = ['Top 2% Target', 'General Applicant', 'Tier-2 Applicant']
+        probabilities = [0.08, 0.04, 0.0001]
 
-    # 3. 通过 OSC 告诉 TouchDesigner 发生了状态变化
-    # 发送图片路径 (字符串类型)
-    client.send_message("/aura/chart_path", chart_path)
-    # 发送显示图表的触发指令 (1代表显示图表，0代表显示粒子)
-    client.send_message("/aura/show_chart", 1.0)
+        plt.figure(figsize=(8, 6))
+        plt.bar(labels, probabilities, color=['#4fc3f7', '#81c784', '#e57373'])
+        plt.title('MIT Full-Ride Admission Probability Model', color='white')
 
-    print(f"Chart generated and OSC sent: {chart_path}")
+        plt.gca().set_facecolor('black')
+        plt.gcf().patch.set_facecolor('black')
+        plt.gca().tick_params(colors='white')
+        plt.gca().spines['bottom'].set_color('white')
+        plt.gca().spines['left'].set_color('white')
+
+        # 确保图片保存在当前工作目录下
+        chart_path = os.path.abspath("current_chart.png")
+        # 转换路径格式，避免 Windows 反斜杠在 OSC 传输中被转义
+        chart_path = chart_path.replace('\\', '/')
+
+        plt.savefig(chart_path)
+        plt.close()
+
+        # 使用类内部的 transmit 方法发送
+        self.transmit("/aura/chart_path", chart_path)
+        self.transmit("/aura/show_chart", 1.0)
+
+        logger.info(f"Chart generated and OSC sent: {chart_path}")
