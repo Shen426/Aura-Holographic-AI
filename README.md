@@ -9,11 +9,30 @@
 ## 🏗️ 系统架构 (System Architecture)
 本平台采用高度解耦的模块化设计，以支持未来多模态交互的无缝接入：
 
-* 🧠 **`core/` (认知中枢)**：AI 的大脑模块。包含决策系统 (`agent.py`) 与长短期记忆网络，负责处理复杂逻辑与意图生成。
-* 👁️ **`perception/` (感知系统)**：AI 的五官。预留多模态传感器接口，包括计算机视觉（手势/人脸追踪）与音频环境识别。
-* 🗣️ **`interaction/` (交互层)**：连接人与 AI 的桥梁。处理对话管理 (`dialogue_manager.py`) 与多模态控制逻辑。
-* 🎨 **`rendering/` (显示与渲染)**：Aura 的视觉表现层。通过 Python 驱动 Blender API (`particles.py`)，实现从静态网格到高密度动态粒子云（星尘形态）的程序化视觉生成。
-* 🌌 **`spatial/` & `hardware/` (空间与物理映射)**：负责全息投影设备的校准、深度估计与虚拟锚点追踪。
+```mermaid
+graph TD
+    subgraph Physical_Layer [物理感官与执行]
+    S[传感器/ESP32] -->|UART| B(Input Pipeline)
+    end
+    
+    subgraph Perception_Layer [感知与理解]
+    B --> C[Perception System]
+    C -->|多模态数据| D[Core/Agent AI]
+    end
+    
+    subgraph Logic_Layer [认知与决策]
+    D -->|意图决策| E[Interaction Manager]
+    D -->|任务规划| F[Planner]
+    end
+    
+    subgraph Output_Layer [渲染与反馈]
+    E -->|驱动信号| G[Rendering/TouchDesigner]
+    G -->|全息投影| H[User]
+    end
+    
+    style Physical_Layer fill:#f9f9f9,stroke:#333
+    style Logic_Layer fill:#e1f5fe,stroke:#0277bd
+```
 
 ## 🛠 开发方法论 (AI-Augmented Methodology)
 本项目实践了前瞻性的 **AI 协同开发 (AI-Augmented Development)** 范式。
