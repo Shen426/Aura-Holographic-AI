@@ -1,9 +1,36 @@
-from machine import Pin, PWM
-import time  # 从工具箱里拿出一块“时间怀表”
+import machine, neopixel, time, math
 
-servo = PWM(Pin(15))     # 抓取15号引脚，接上手电筒
-servo.freq(50)           # 设定每秒闪烁50次的心跳
+# 初始化 12 颗灯珠
+ring = neopixel.NeoPixel(machine.Pin(13), 12)
 
-servo.duty_u16(4000)     # 发送指令：转到左边的安全位置
-time.sleep(1)            # 看着怀表，让大脑在原地死等 1 秒钟（此时舵机保持不动）
-servo.duty_u16(7000)     # 1秒钟后发送新指令：转到右边的安全位置
+# 【关键点1：设定最高亮度封印】 把它控制在温润的 40
+MAX_BRIGHTNESS = 40 
+
+try:
+    # 建立一个时间变量，作为生命流动的标尺
+    t = 0.0 
+    
+    while True:
+        # 【关键点2：使用数学引擎生成丝滑曲线】
+        # math.sin(t) 会在 -1.0 到 1.0 之间平滑起伏
+        # 我们用 (sin(t) + 1) / 2 把它转换成 0 到 1 之间的完美比例系数
+        organic_factor = (math.sin(t) + 1.0) / 2.0
+        
+        # 将系数乘以我们设定的最高亮度，得到当前这一瞬间的真实亮度
+        current_b = int(organic_factor * MAX_BRIGHTNESS)
+        
+        # 赋予全环 Aura 标志性的生命之绿
+        ring.fill((0, current_b, 0))
+        ring.write()
+        
+        # 【关键点3：心率控制】
+        # t 每次增加的数值，决定了心脏跳动的快慢。
+        # 0.06 是一个极其接近人类深度睡眠/深呼吸的平缓频率。
+        t += 0.06 
+        
+        # 保持 60帧/秒 的极高刷新率，拒绝卡顿
+        time.sleep(0.016) 
+            
+except KeyboardInterrupt:
+    ring.fill((0, 0, 0))
+    ring.write()
